@@ -1,0 +1,49 @@
+# 给定一个比特币区块，取出该区块中每笔交易的txhash，inputs(address,amount,index)和outputs(address,amount,index)、txfee，并依次打印上述信息
+from bitcoinrpc.authproxy import AuthServiceProxy
+
+rpc_user = "fuguang"
+rpc_password = "fg@123.."
+rpc_host = "127.0.0.1"
+rpc_port = "8332"
+
+rpc_connection = AuthServiceProxy(f"http://{rpc_user}:{rpc_password}@{rpc_host}:{rpc_port}")
+
+block_hash = rpc_connection.getblockhash(65536)
+block = rpc_connection.getblock(block_hash)
+
+for txid in block['tx']:
+    tx = rpc_connection.getrawtransaction(txid, True)
+    
+    txhash = tx['txid']
+    print(f"Transaction Hash: {txhash}")
+    
+    total_input = 0
+    for vin in tx['vin']:
+        if 'coinbase' in vin:
+            continue
+        prev_tx = rpc_connection.getrawtransaction(vin['txid'], True)
+        total_input += prev_tx['vout'][vin['vout']]['value']
+        
+    total_output = sum(vout['value'] for vout in tx['vout'])
+    txfee = total_input - total_output if total_input > 0 else 0
+    print(f"Transaction Fee: {txfee:.8f} BTC")
+    
+    print("Inputs:")
+    for vin in tx['vin']:
+        if 'coinbase' in vin:
+            continue
+        prev_tx = rpc_connection.getrawtransaction(vin['txid'], True)
+        prev_vout = prev_tx['vout'][vin['vout']]
+        address = prev_vout['scriptPubKey']['addresses'][0]
+        amount = prev_vout['value']
+        index = vin['vout']
+        print(f"  Address: {address}, Amount: {amount:.8f}, Index: {index}")
+    
+    print("Outputs:")
+    for i, vout in enumerate(tx['vout']):
+        address = vout['scriptPubKey']['addresses'][0] if 'addresses' in vout['scriptPubKey'] else 'Unknown'
+        amount = vout['value']
+        index = i
+        print(f"  Address: {address}, Amount: {amount:.8f}, Index: {index}")
+    
+    print("="*50)
