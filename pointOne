@@ -1,8 +1,8 @@
 # 给定一个比特币区块，取出该区块中每笔交易的txhash，inputs(address,amount,index)和outputs(address,amount,index)、txfee，并依次打印上述信息
 from bitcoinrpc.authproxy import AuthServiceProxy
 
-rpc_user = "fuguang"
-rpc_password = "fg@123.."
+rpc_user = "xiaomeiqiu1234@163.com"
+rpc_password = "Zv!9tCT#wbZsz#8"
 rpc_host = "127.0.0.1"
 rpc_port = "8332"
 
