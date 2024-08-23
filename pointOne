@@ -1,9 +1,6 @@
 # 给定一个比特币区块，取出该区块中每笔交易的txhash，inputs(address,amount,index)和outputs(address,amount,index)、txfee，并依次打印上述信息
 import requests
-
-# 连接到比特币节点的 URL
 btc_node_url = 'https://compatible-soft-lambo.btc.quiknode.pro/'
-
 def get_block_data(block_hash):
     payload = {
         "jsonrpc": "1.0",
@@ -14,7 +11,6 @@ def get_block_data(block_hash):
     response = requests.post(btc_node_url, json=payload)
     block_data = response.json()['result']
     return block_data
-
 def parse_transactions(block_data):
     for tx in block_data['tx']:
         txhash = tx['txid']
@@ -29,8 +25,6 @@ def parse_transactions(block_data):
         for out in outputs:
             print(f"  Address: {out[2]}, Amount: {out[1]}, Index: {out[0]}")
         print(f"Transaction Fee: {txfee}\n")
-
-# 使用区块哈希获取区块信息并解析交易
 block_hash = "00000000000000000009e3b74d7c6b2bb4d0e6e2c658ae7344e5ea935fe55b7c"  
 block_data = get_block_data(block_hash)
 parse_transactions(block_data)
