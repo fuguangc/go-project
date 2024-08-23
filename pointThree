@@ -1,0 +1,25 @@
+# 给定一个区块高度，完成对应区块的数据获取，解析里面所有的ERC20 Trasnfer交易，并打印出来对应的token地址，以及from、to 、amount
+from web3 import Web3
+infura_url = 'https://ropsten.infura.io/v3/YOUR_INFURA_PROJECT_ID'
+web3 = Web3(Web3.HTTPProvider(infura_url))
+if web3.isConnected():
+    print("Connected to Ethereum network.")
+else:
+    print("Failed to connect to Ethereum network.")
+    exit()
+block_number = 1234567  
+block = web3.eth.getBlock(block_number, full_transactions=True
+transfer_function_selector = '0xa9059cbb'
+for tx in block.transactions:
+    input_data = tx.input
+    if input_data.startswith(transfer_function_selector):
+        to_address = '0x' + input_data[34:74]
+        amount_hex = input_data[74:]
+        amount = int(amount_hex, 16) 
+        token_address = tx.to
+        from_address = tx['from']
+        print(f"Token Address: {token_address}")
+        print(f"From: {from_address}")
+        print(f"To: {to_address}")
+        print(f"Amount: {amount}")
+        print("="*50)
