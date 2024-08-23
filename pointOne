@@ -1,50 +1,37 @@
 # 给定一个比特币区块，取出该区块中每笔交易的txhash，inputs(address,amount,index)和outputs(address,amount,index)、txfee，并依次打印上述信息
 import requests
-import json
 
-rpc_url = "http://127.0.0.1:8332" 
-rpc_user = "xiaomeiqiu1234@163.com"
-rpc_password = "Zv!9tCT#wbZsz#8"
+# 连接到比特币节点的 URL
+btc_node_url = 'https://compatible-soft-lambo.btc.quiknode.pro/'
 
-# 区块哈希
-block_hash = "bitcoin-cli getblockhash 680000"
+def get_block_data(block_hash):
+    payload = {
+        "jsonrpc": "1.0",
+        "id": "python",
+        "method": "getblock",
+        "params": [block_hash, 2]
+    }
+    response = requests.post(btc_node_url, json=payload)
+    block_data = response.json()['result']
+    return block_data
 
-# 发送RPC请求
-def rpc_request(method, params=[]):
-    headers = {'content-type': 'application/json'}
-    payload = json.dumps({
-        "method": method,
-        "params": params,
-        "jsonrpc": "2.0",
-        "id": 0
-    })
-    response = requests.post(rpc_url, headers=headers, data=payload, auth=(rpc_user, rpc_password))
-    return response.json()
+def parse_transactions(block_data):
+    for tx in block_data['tx']:
+        txhash = tx['txid']
+        inputs = [(vin['txid'], vin.get('vout', ''), vin.get('value', 0), vin.get('address', '')) for vin in tx['vin']]
+        outputs = [(vout['n'], vout['value'], vout['scriptPubKey'].get('addresses', [''])[0]) for vout in tx['vout']]
+        txfee = sum(vin.get('value', 0) for vin in tx['vin']) - sum(vout['value'] for vout in tx['vout'])
+        print(f"Transaction Hash: {txhash}")
+        print("Inputs:")
+        for inp in inputs:
+            print(f"  Address: {inp[3]}, Amount: {inp[2]}, Index: {inp[1]}")
+        print("Outputs:")
+        for out in outputs:
+            print(f"  Address: {out[2]}, Amount: {out[1]}, Index: {out[0]}")
+        print(f"Transaction Fee: {txfee}\n")
 
-# 获取区块数据
-block_data = rpc_request('getblock', [block_hash, 2]) 
+# 使用区块哈希获取区块信息并解析交易
+block_hash = "00000000000000000009e3b74d7c6b2bb4d0e6e2c658ae7344e5ea935fe55b7c"  
+block_data = get_block_data(block_hash)
+parse_transactions(block_data)
 
-# 提取并打印每笔交易的信息
-for tx in block_data['result']['tx']:
-    txhash = tx['txid']
-    print(f"Transaction Hash: {txhash}")
-    
-    # Inputs
-    for vin in tx['vin']:
-        if 'coinbase' in vin: 
-            continue
-        address = vin['address'] if 'address' in vin else "Unknown"
-        amount = vin['value'] if 'value' in vin else 0
-        index = vin['vout']
-        print(f"  Input Address: {address}, Amount: {amount}, Index: {index}")
-
-    # Outputs
-    for vout in tx['vout']:
-        address = vout['scriptPubKey']['addresses'][0] if 'addresses' in vout['scriptPubKey'] else "Unknown"
-        amount = vout['value']
-        index = vout['n']
-        print(f"  Output Address: {address}, Amount: {amount}, Index: {index}")
-
-    # Fee
-    txfee = sum(vin['value'] for vin in tx['vin'] if 'value' in vin) - sum(vout['value'] for vout in tx['vout'])
-    print(f"  Transaction Fee: {txfee}")
