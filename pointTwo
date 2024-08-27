@@ -11,8 +11,8 @@ else:
 sender_address = 'https://purple-magical-scion.btc.quiknode.pro/a3312fcaaf9d15dde15f7bd8af1ed553336b785e'
 receiver_address = 'https://purple-magical-scion.btc.quiknode.pro/a3312fcaaf9d15dde15f7bd8af1ed553336b785e'
 private_key = 'QN_a22255b2370d436894c1207c1abe3d36'
-erc20_contract_address = 'ERC20_CONTRACT_ADDRESS'
-erc20_abi = json.loads('[ERC20_CONTRACT_ABI]')
+erc20_contract_address = 'https://purple-magical-scion.btc.quiknode.pro/a3312fcaaf9d15dde15f7bd8af1ed553336b785e'
+erc20_abi = json.loads('https://purple-magical-scion.btc.quiknode.pro/a3312fcaaf9d15dde15f7bd8af1ed553336b785e')
 erc20_contract = web3.eth.contract(address=erc20_contract_address, abi=erc20_abi)
 token_amount = web3.toWei(1, 'ether')  
 nonce = web3.eth.getTransactionCount(sender_address)
