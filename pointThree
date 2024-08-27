@@ -1,6 +1,6 @@
 # 给定一个区块高度，完成对应区块的数据获取，解析里面所有的ERC20 Trasnfer交易，并打印出来对应的token地址，以及from、to 、amount
 from web3 import Web3
-infura_url = 'https://ropsten.infura.io/v3/YOUR_INFURA_PROJECT_ID'
+infura_url = 'https://ropsten.infura.io/v3/https://compatible-soft-lambo.btc.quiknode.pro/'
 web3 = Web3(Web3.HTTPProvider(infura_url))
 if web3.isConnected():
     print("Connected to Ethereum network.")
