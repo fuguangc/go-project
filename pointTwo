@@ -1,7 +1,7 @@
 # 测试网发起一笔ERC20 token的转账，并广播到链上，不限制链，只要是EVM系即可
 from web3 import Web3
 import json
-infura_url = 'https://ropsten.infura.io/v3/YOUR_INFURA_PROJECT_ID'
+infura_url = 'https://ropsten.infura.io/v3/https://compatible-soft-lambo.btc.quiknode.pro/'
 web3 = Web3(Web3.HTTPProvider(infura_url))
 if web3.isConnected():
     print("Connected to Ethereum network.")
