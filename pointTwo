@@ -4,7 +4,7 @@ import json
 infura_url = 'https://ropsten.infura.io/v3/https://compatible-soft-lambo.btc.quiknode.pro/'
 web3 = Web3(Web3.HTTPProvider(infura_url))
 if web3.isConnected():
-    print("Connected to Ethereum network.")。
+    print("Connected to Ethereum network.")
 else:
     print("Failed to connect to Ethereum network.")
     exit()
