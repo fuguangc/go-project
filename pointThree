@@ -15,7 +15,7 @@ for tx in block.transactions:
     if input_data.startswith(transfer_function_selector):
         to_address = '0x' + input_data[34:74]
         amount_hex = input_data[74:]
-        amount = int(amount_hex, 16) 
+        amount = int(amount_hex, 16)
         token_address = tx.to
         from_address = tx['from']
         print(f"Token Address: {token_address}")
