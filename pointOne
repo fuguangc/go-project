@@ -5,7 +5,7 @@ def get_block_data(block_hash):
     payload = {
         "jsonrpc": "1.0",
         "id": "python",
-        "method": "getblock",/
+        "method": "getblock",
         "params": [block_hash, 2]
     }
     response = requests.post(btc_node_url, json=payload)
